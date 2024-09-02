@@ -1,0 +1,1 @@
+node* fifth= new node(20);
