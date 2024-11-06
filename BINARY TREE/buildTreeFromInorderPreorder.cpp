@@ -1,5 +1,6 @@
 #include <iostream>
 #include <queue>
+#include<unordered_map>
 using namespace std;
 
 class node{
@@ -48,6 +49,32 @@ root->right= buildTreeFromPreorderInorder(inorder,preorder,size, preIndex,pos+1,
 return root;
 }
 
+node* buildTreeFromPostOrderInorder(int inorder[], int postorder[], int postIndex, int size, int inorderStart, int inorderEnd, unordered_map<int,int>&mapp){
+
+    //base case
+
+     if(postIndex <0 || inorderStart > inorderEnd){
+        return NULL;
+     }
+
+     //A
+
+     int element = postorder[postIndex];
+     postIndex--;
+     node* root= new node(element);
+
+    //  int pos= findPosition(inorder,size, element);
+    int pos= mapp[element];
+
+     //root->right solve
+     root->right = buildTreeFromPostOrderInorder(inorder,postorder,postIndex,size,pos+1,inorderEnd,mapp);
+
+     //root->left solve
+     root->left=buildTreeFromPostOrderInorder(inorder,postorder,postIndex,size,inorderStart, pos-1,mapp);
+
+     return root;
+}
+
 void levelOrderTraversal(node* root){
     queue<node*>q; 
     q.push(root);
@@ -77,20 +104,43 @@ else{
        
     }
 
+
+void createMapping(unordered_map<int,int>& mapp, int inorder[], int n){
+  for(int i=0; i<n; i++){
+ mapp[inorder[i]]=i;
+  }
+} 
 int main() {
  
- int inorder[]= {40,20,50,10,60,30,70};
- int preorder[]= {10,20,40,50,30,60,70};
- int size=7;
- int preIndex=0;
- int inorderStart=0;
- int inorderEnd=size-1;
+//  int inorder[]= {40,20,50,10,60,30,70};
+//  int preorder[]= {10,20,40,50,30,60,70};
+//  int size=7;
+//  int preIndex=0;
+//  int inorderStart=0;
+//  int inorderEnd=size-1;
 
+
+// cout<<"building tree"<<endl;
+// node* root= buildTreeFromPreorderInorder(inorder,preorder,size,preIndex,inorderStart,inorderEnd);
+
+// cout<<"print levell order traversal"<<endl;
+
+// levelOrderTraversal(root);
+
+int inorder[]= {40,20,10,50,30,60};
+int postorder[]= {40,20,50,60,30,10};
+int size=6;
+int postIndex= size-1;
+int inorderStart=0;
+int inorderEnd= size-1;
+
+unordered_map<int,int>mapp;
+createMapping(mapp,inorder,size);
 
 cout<<"building tree"<<endl;
-node* root= buildTreeFromPreorderInorder(inorder,preorder,size,preIndex,inorderStart,inorderEnd);
+node* root= buildTreeFromPostOrderInorder(inorder,postorder,postIndex,size,inorderStart,inorderEnd,mapp);
 
-cout<<"print levell order traversal"<<endl;
+cout<<"print level order traversal"<<endl;
 
 levelOrderTraversal(root);
   return 0;
