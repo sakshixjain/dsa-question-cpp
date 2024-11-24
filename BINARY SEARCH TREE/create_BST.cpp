@@ -96,10 +96,10 @@ void postOrderTraversal(node* root){
     cout<<root->data<<" ";
 }
 
-bool findNodeInBST(node* root, int target){
-  if(root==NULL) return false;
+node* findNodeInBST(node* root, int target){
+  if(root==NULL) return NULL;
 
-  if(root->data ==target) return true;
+  if(root->data ==target) return root;
 
   if(target>root->data){
     //find in right side
@@ -133,6 +133,55 @@ int maxVal(node* root){
   }
   return temp->data;
 }
+
+
+node* deleteNodeInBST(node* root, int target){
+  cout<<" request for deleting target "<<target<<endl;
+  if(root== NULL) return NULL;
+
+  //stemp 1
+  // node* temp= root;
+
+  //i want to delete temp
+if(root->data== target){
+
+  if(root->left ==NULL && root->right ==NULL){
+    //leaf node
+    delete root;
+    return NULL;
+  }
+  else if(root->left ==NULL && root->right !=NULL){
+    
+    node* child= root->right;
+
+    delete root;
+    return child;
+  }
+  else if(root->left !=NULL && root->right ==NULL){
+    node* child= root->left;
+    delete root;
+    return child;
+  }
+  else{
+    //dono child exits krte h
+    // inorder predeccessor of left subtree
+
+    int inorderPre = maxVal(root->left);
+
+    root->data= inorderPre;
+
+  root->left=  deleteNodeInBST(root->left, inorderPre);
+    return root;
+  }
+}
+else if(target > root->data){
+  root->right= deleteNodeInBST(root->right, target);
+}
+else if(target< root->data){
+  root->left= deleteNodeInBST(root->left, target);
+}
+return root;
+}
 int main() {
 node* root= NULL;
 cout<<"enter the data for the node "<<endl;
@@ -140,20 +189,23 @@ takeInput(root);
 cout<<"Printing the level of order traversal output"<<endl;
 levelOrderTraversal(root);
 cout<<endl;
-cout<<"print preorder"<<endl;
-preOrderTraversal(root);
-cout<<endl;
-cout<<"print inorder"<<endl;
-inOrderTraversal(root);
-cout<<endl;
-cout<<"print postorder"<<endl;
-postOrderTraversal(root);
- cout<<endl;
+// cout<<"print preorder"<<endl;
+// preOrderTraversal(root);
+// cout<<endl;
+// cout<<"print inorder"<<endl;
+// inOrderTraversal(root);
+// cout<<endl;
+// cout<<"print postorder"<<endl;
+// postOrderTraversal(root);
+//  cout<<endl;
 
- bool ans =findNodeInBST(root, 153);
+ bool ans =findNodeInBST(root, 150);
  cout<<" present or not "<<ans<<endl;
 
  cout<<endl<< "minimum value :"<<minVal(root)<<endl;
  cout<<endl<< "maximum value :"<<maxVal(root)<<endl;
+
+ deleteNodeInBST(root, 100);
+ levelOrderTraversal(root);
   return 0;
 }
