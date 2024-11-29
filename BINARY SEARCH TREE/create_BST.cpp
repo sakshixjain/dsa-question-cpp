@@ -182,13 +182,80 @@ else if(target< root->data){
 }
 return root;
 }
+
+node* inorderBST(int inorder[], int s, int e){
+  if(s>e) return NULL;
+
+  int m= (e+s)/2;
+  node* root= new node(inorder[m]);
+  root->left= inorderBST(inorder,s,m-1);
+  root->right= inorderBST(inorder,m+1,e);
+  return root;
+}
+
+void convertedIntoDLL(node* root, node*& head){
+  if(root ==NULL) return;
+
+  //right subtree convert into DLL
+convertedIntoDLL(root->right, head);
+
+//atach root node r
+root->right= head;
+
+if(head != NULL){
+  head->left= root;
+}
+//update head
+head= root;
+
+//left subtree
+
+convertedIntoDLL(root->left, head);
+
+}
+
+
+void printLinkedList(node* head){
+  node* temp= head;
+  cout<<endl;
+  while(temp != NULL){
+    cout<<temp->data<<" ";
+    temp=temp->right;
+  }
+  cout<<endl;
+}
+
+
+node* sortedLLIntoBST(node*&head,int n){
+  //base case
+  if(n<=0 || head==NULL) return NULL;
+
+node* left = sortedLLIntoBST(head, n-1-n/2);
+
+node* root= head;
+
+root->left= left;
+
+head= head->right;
+
+//right side solve
+
+root->right= sortedLLIntoBST(head, n/2);
+
+return root;
+}
 int main() {
-node* root= NULL;
-cout<<"enter the data for the node "<<endl;
-takeInput(root);
-cout<<"Printing the level of order traversal output"<<endl;
+int inorder[]= {1,2,3,4,5,6,7,8,9};
+int s=0;
+int e= 8;
+
+node* root= inorderBST(inorder,s,e);
 levelOrderTraversal(root);
-cout<<endl;
+// cout<<"enter the data for the node "<<endl;
+// takeInput(root);
+// cout<<"Printing the level of order traversal output"<<endl;
+// levelOrderTraversal(root);
+// cout<<endl;
 // cout<<"print preorder"<<endl;
 // preOrderTraversal(root);
 // cout<<endl;
@@ -199,13 +266,23 @@ cout<<endl;
 // postOrderTraversal(root);
 //  cout<<endl;
 
- bool ans =findNodeInBST(root, 150);
- cout<<" present or not "<<ans<<endl;
+//  bool ans =findNodeInBST(root, 150);
+//  cout<<" present or not "<<ans<<endl;
 
- cout<<endl<< "minimum value :"<<minVal(root)<<endl;
- cout<<endl<< "maximum value :"<<maxVal(root)<<endl;
+//  cout<<endl<< "minimum value :"<<minVal(root)<<endl;
+//  cout<<endl<< "maximum value :"<<maxVal(root)<<endl;
 
- deleteNodeInBST(root, 100);
- levelOrderTraversal(root);
+//  deleteNodeInBST(root, 100);
+//  levelOrderTraversal(root);
+cout<<"printing sorted DLL "<<endl;
+node* head= NULL;
+
+convertedIntoDLL(root,head);
+printLinkedList(head);
+node* root1= NULL;
+root1= sortedLLIntoBST(head, 9);
+cout<<"doping level order traversal for root 1"<<endl;
+levelOrderTraversal(root1);
+
   return 0;
 }
