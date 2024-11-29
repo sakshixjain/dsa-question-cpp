@@ -1,5 +1,6 @@
 #include <iostream>
 #include <queue>
+#include<limits.h>
 using namespace std;
 
 class node{
@@ -12,6 +13,25 @@ class node{
     this->data=data;
     this->left=NULL;
     this->right=NULL;
+  }
+};
+
+class nodedata{
+  public:
+  int size;
+  int minVal;
+  int maxVal;
+  bool validBST;
+
+nodedata(){
+
+}
+
+  nodedata(int size, int max, int min,bool valid){
+    this->size= size;
+    minVal=min;
+    maxVal= max;
+    validBST=valid;
   }
 };
 
@@ -244,17 +264,75 @@ root->right= sortedLLIntoBST(head, n/2);
 
 return root;
 }
-int main() {
-int inorder[]= {1,2,3,4,5,6,7,8,9};
-int s=0;
-int e= 8;
 
-node* root= inorderBST(inorder,s,e);
-levelOrderTraversal(root);
+nodedata* findLargestBSTInBinaryTree(node* root, int&ans){
+  //base case
+
+  if(root ==NULL){
+    nodedata* temp = new nodedata(0,INT_MIN, INT_MAX, true);
+    return temp;
+  }
+
+  nodedata* leftAns= findLargestBSTInBinaryTree(root->left, ans);
+  nodedata* rightAns= findLargestBSTInBinaryTree(root->right, ans);  
+
+  //cheking start here 
+  nodedata* currentNodeAns = new nodedata();
+
+  currentNodeAns->size = leftAns->size + rightAns->size + 1;
+
+  currentNodeAns->maxVal = max(root->data, rightAns->maxVal);
+  currentNodeAns->minVal= min(root->data,leftAns->minVal);
+
+  if(leftAns->validBST && rightAns->validBST && (root->data > leftAns->maxVal && root->data < rightAns->minVal)){
+    currentNodeAns->validBST = true;
+  }
+  else{
+    currentNodeAns->validBST= false;
+  }
+
+  if(currentNodeAns->validBST){
+    ans = max(ans, currentNodeAns->size);
+  }
+  return currentNodeAns;
+}
+
+int main() {
+// int inorder[]= {1,2,3,4,5,6,7,8,9};
+// int s=0;
+// int e= 8;
+
+// node* root= inorderBST(inorder,s,e);
+// levelOrderTraversal(root);
+// node* root= NULL;
 // cout<<"enter the data for the node "<<endl;
 // takeInput(root);
-// cout<<"Printing the level of order traversal output"<<endl;
-// levelOrderTraversal(root);
+
+node* root= new node(50);
+node* first= new node(30);
+node* second= new node(60);
+node* third= new node(5);
+node* fourth= new node(20);
+node* fifth= new node(45);
+node* sixth= new node(70);
+node* seventh= new node(65);
+node* eight= new node(80);
+
+root->left= first;
+root->right= second;
+first->left= third;
+first->right= fourth;
+second->left= fifth;
+second->right= sixth;
+sixth->left= seventh;
+sixth->right= eight;
+
+cout<<"Printing the level of order traversal output"<<endl;
+levelOrderTraversal(root);
+
+int ans =0;
+findLargestBSTInBinaryTree(root, ans);
+cout<<"Largest BST ka size: "<<ans<<endl;
 // cout<<endl;
 // cout<<"print preorder"<<endl;
 // preOrderTraversal(root);
@@ -274,15 +352,15 @@ levelOrderTraversal(root);
 
 //  deleteNodeInBST(root, 100);
 //  levelOrderTraversal(root);
-cout<<"printing sorted DLL "<<endl;
-node* head= NULL;
+// cout<<"printing sorted DLL "<<endl;
+// node* head= NULL;
 
-convertedIntoDLL(root,head);
-printLinkedList(head);
-node* root1= NULL;
-root1= sortedLLIntoBST(head, 9);
-cout<<"doping level order traversal for root 1"<<endl;
-levelOrderTraversal(root1);
+// convertedIntoDLL(root,head);
+// printLinkedList(head);
+// node* root1= NULL;
+// root1= sortedLLIntoBST(head, 9);
+// cout<<"doping level order traversal for root 1"<<endl;
+// levelOrderTraversal(root1);
 
   return 0;
 }
