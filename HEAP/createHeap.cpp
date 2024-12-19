@@ -32,39 +32,40 @@ void insert(int value){
   }
 }
 
-int delete(){
-  int ans= arr[1];
-  // replace the root node with last node
-   arr[1]= arr[size];
-   size--;
+// int delete(){
+//   int ans= arr[1];
+//   // replace the root node with last node
+//    arr[1]= arr[size];
+//    size--;
 
-  //place root node on its correct postion
-  int index= 1;
-  while(index <size){
-    int left= 2*index;
-    int right= 2*index +1;
+//   //place root node on its correct postion
+//   int index= 1;
+//   while(index <size){
+//     int left= 2*index;
+//     int right= 2*index +1;
 
-   int largest= index;
+//    int largest= index;
 
-   if(left<size && arr[largest] < arr[left]){
-    largest = left;
+//    if(left<size && arr[largest] < arr[left]){
+//     largest = left;
 
-   }
-   if(right <size && arr[largest] <arr[right]){
-    largest= right;
-   }
+//    }
+//    if(right <size && arr[largest] <arr[right]){
+//     largest= right;
+//    }
 
-   if(largest == index){
-    //value is at correct postion
-break;
-   }
-   else{
-    swap(arr[index], arr[largest]);
-    index= largest;
-   }
-  }
-  return ans;
-}
+//    if(largest == index){
+//     //value is at correct postion
+// break;
+//    }
+//    else{
+//     swap(arr[index], arr[largest]);
+//     index= largest;
+//    }
+//   }
+//   return ans;
+// }
+
 };
 
 int main() {
